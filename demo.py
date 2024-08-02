@@ -23,10 +23,10 @@ pipe.to("cuda")
 
 # Load image
 image = load_image(
-    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/blob/main/images/prod.png"
+    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/resolve/main/images/prod.png"
 )
 mask = load_image(
-    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/blob/main/images/mask.jpeg"
+    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/resolve/main/images/mask.jpeg"
 )
 
 # Set args
