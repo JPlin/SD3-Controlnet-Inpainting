@@ -1,3 +1,14 @@
+---
+license: other
+language:
+- en
+pipeline_tag: text-to-image
+tags:
+- stable-diffusion
+- alimama-creative
+library_name: diffusers
+---
+
 # SD3 ControlNet Inpainting
 
 ![SD3](images/sd3_compressed.png)
@@ -35,11 +46,14 @@ From left to right: Input image, Masked image, SDXL inpainting, Ours.
 ![4](images/5_compressed.png)
 <center><i>an air conditioner hanging on the bedroom wall</i></center>
 
-# How to Use
+# Using with Diffusers
 
-Dowanlod two python files：pipeline_sd3_controlnet_inpainting.py and controlnet_sd3.py can be found in the root directory of the current repo.
+Step1： Make sure you upgrade to the latest version of diffusers(>=0.29.2): pip install -U diffusers.
 
-We will merge this Feature to official Diffusers.
+Step2: Download the two required Python files（pipeline_sd3_controlnet_inpainting.py and controlnet_sd3.py.
+(We will merge this Feature to official Diffusers.)
+
+Step3: And then you can run demo.py or following:
 
 ``` python
 from diffusers.utils import load_image, check_min_version
@@ -110,3 +124,6 @@ The model was trained on 12M laion2B and internal source images for 20k steps at
 ## Limitation
 
 Due to the fact that only 1024*1024 pixel resolution was used during the training phase, the inference performs best at this size, with other sizes yielding suboptimal results. We will initiate multi-resolution training in the future, and at that time, we will open-source the new weights.
+
+## LICENSE
+The model is based on SD3 finetuning; therefore, the license follows the original [SD3 license](https://huggingface.co/stabilityai/stable-diffusion-3-medium#license).
