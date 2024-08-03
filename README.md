@@ -1,14 +1,3 @@
----
-license: other
-language:
-- en
-pipeline_tag: text-to-image
-tags:
-- stable-diffusion
-- alimama-creative
-library_name: diffusers
----
-
 # SD3 ControlNet Inpainting
 
 ![SD3](images/sd3_compressed.png)
