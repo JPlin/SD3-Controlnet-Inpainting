@@ -48,8 +48,9 @@ Step3: And then you can run demo.py or following:
 from diffusers.utils import load_image, check_min_version
 import torch
 
-from pipeline_sd3_controlnet_inpainting import StableDiffusion3ControlNetInpaintingPipeline, one_image_and_mask
+# Local File
 from controlnet_sd3 import SD3ControlNetModel
+from pipeline_stable_diffusion_3_controlnet_inpainting import StableDiffusion3ControlNetInpaintingPipeline
 
 check_min_version("0.29.2")
 
@@ -57,6 +58,7 @@ check_min_version("0.29.2")
 controlnet = SD3ControlNetModel.from_pretrained(
     "alimama-creative/SD3-Controlnet-Inpainting",
     use_safetensors=True,
+    extra_conditioning_channels=1,
 )
 pipe = StableDiffusion3ControlNetInpaintingPipeline.from_pretrained(
     "stabilityai/stable-diffusion-3-medium-diffusers",
@@ -69,18 +71,17 @@ pipe.to("cuda")
 
 # Load image
 image = load_image(
-    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/resolve/main/images/prod.png"
+    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/blob/main/images/prod.png"
 )
 mask = load_image(
-    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/resolve/main/images/mask.jpeg"
+    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/blob/main/images/mask.jpeg"
 )
 
 # Set args
 width = 1024
 height = 1024
 prompt="a woman wearing a white jacket, black hat and black pants is standing in a field, the hat writes SD3"
-generator = torch.Generator(device="cuda").manual_seed(48)
-input_dict = one_image_and_mask(image, mask, size=(width, height), latent_scale=pipe.vae_scale_factor, invert_mask = True)
+generator = torch.Generator(device="cuda").manual_seed(24)
 
 # Inference
 res_image = pipe(
@@ -88,15 +89,15 @@ res_image = pipe(
     prompt=prompt,
     height=height,
     width=width,
-    control_image= input_dict['pil_masked_image'],  # H, W, C,
-    control_mask=input_dict["mask"] > 0.5,  # B,1,H,W
+    control_image = image,
+    control_mask = mask,
     num_inference_steps=28,
     generator=generator,
     controlnet_conditioning_scale=0.95,
     guidance_scale=7,
 ).images[0]
 
-res_image.save(f'res.png')
+res_image.save(f'sd3.png')
 ```
 
 
