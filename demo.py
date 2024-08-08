@@ -24,16 +24,16 @@ pipe.to("cuda")
 
 # Load image
 image = load_image(
-    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/blob/main/images/prod.png"
+    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/resolve/main/images/dog.png"
 )
 mask = load_image(
-    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/blob/main/images/mask.jpeg"
+    "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/resolve/main/images/dog_mask.png"
 )
 
 # Set args
 width = 1024
 height = 1024
-prompt="a woman wearing a white jacket, black hat and black pants is standing in a field, the hat writes SD3"
+prompt="A cat is sitting next to a puppy."
 generator = torch.Generator(device="cuda").manual_seed(24)
 
 # Inference
