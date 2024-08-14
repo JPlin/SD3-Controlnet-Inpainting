@@ -1,4 +1,8 @@
-# SD3 ControlNet Inpainting
+# Updates
+
+✨🎉 This model has been merged into [Diffusers](https://moon-ci-docs.huggingface.co/docs/diffusers/pr_9099/en/api/pipelines/controlnet_sd3) and can now be used conveniently. 💡 🎉✨
+
+# Examples
 
 ![SD3](images/sd3_compressed.png)
 
@@ -7,6 +11,8 @@
 ![bucket_alibaba](images/bucket_ali_compressed.png )
 
 <center><i>a person wearing a white shoe, carrying a white bucket with text "alibaba" on it</i></center>
+
+## SD3 Controlnet Inpainting
 
 Finetuned controlnet inpainting model based on sd3-medium, the inpainting model offers several advantages:
 
@@ -37,28 +43,21 @@ From left to right: Input image, Masked image, SDXL inpainting, Ours.
 
 # Using with Diffusers
 
-Step1： Make sure you upgrade to the latest version of diffusers(>=0.29.2): pip install -U diffusers.
+Install from source and Run
 
-Step2: Download the two required Python files（pipeline_sd3_controlnet_inpainting.py and controlnet_sd3.py.
-(We will merge this Feature to official Diffusers.)
-
-Step3: And then you can run demo.py or following:
+``` Shell
+pip uninstall diffusers
+pip install git+https://github.com/huggingface/diffusers
+```
 
 ``` python
-from diffusers.utils import load_image, check_min_version
 import torch
+from diffusers.utils import load_image, check_min_version
+from diffusers.pipelines import StableDiffusion3ControlNetInpaintingPipeline
+from diffusers.models.controlnet_sd3 import SD3ControlNetModel
 
-# Local File
-from controlnet_sd3 import SD3ControlNetModel
-from pipeline_stable_diffusion_3_controlnet_inpainting import StableDiffusion3ControlNetInpaintingPipeline
-
-check_min_version("0.29.2")
-
-# Build model
 controlnet = SD3ControlNetModel.from_pretrained(
-    "alimama-creative/SD3-Controlnet-Inpainting",
-    use_safetensors=True,
-    extra_conditioning_channels=1,
+    "alimama-creative/SD3-Controlnet-Inpainting", use_safetensors=True, extra_conditioning_channels=1
 )
 pipe = StableDiffusion3ControlNetInpaintingPipeline.from_pretrained(
     "stabilityai/stable-diffusion-3-medium-diffusers",
@@ -69,35 +68,29 @@ pipe.text_encoder.to(torch.float16)
 pipe.controlnet.to(torch.float16)
 pipe.to("cuda")
 
-# Load image
 image = load_image(
     "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/resolve/main/images/dog.png"
 )
 mask = load_image(
     "https://huggingface.co/alimama-creative/SD3-Controlnet-Inpainting/resolve/main/images/dog_mask.png"
 )
-
-# Set args
 width = 1024
 height = 1024
-prompt="A cat is sitting next to a puppy."
+prompt = "A cat is sitting next to a puppy."
 generator = torch.Generator(device="cuda").manual_seed(24)
-
-# Inference
 res_image = pipe(
-    negative_prompt='deformed, distorted, disfigured, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, mutated hands and fingers, disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation, NSFW',
+    negative_prompt="deformed, distorted, disfigured, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, mutated hands and fingers, disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation, NSFW",
     prompt=prompt,
     height=height,
     width=width,
-    control_image = image,
-    control_mask = mask,
+    control_image=image,
+    control_mask=mask,
     num_inference_steps=28,
     generator=generator,
     controlnet_conditioning_scale=0.95,
     guidance_scale=7,
 ).images[0]
-
-res_image.save(f'sd3.png')
+res_image.save(f"sd3.png")
 ```
 
 
